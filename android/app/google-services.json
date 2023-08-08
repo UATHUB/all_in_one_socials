@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "746538023958",
+    "firebase_url": "https://all-in-one-socials-default-rtdb.firebaseio.com",
+    "project_id": "all-in-one-socials",
+    "storage_bucket": "all-in-one-socials.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746538023958:android:f6fd647e17e289935a0937",
+        "android_client_info": {
+          "package_name": "com.example.all_in_one_socials"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "746538023958-7fi7d44npkcbnc4vrj12pfjfbi7jtqku.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBB08oYeirg47u5emhZjWeNUMmOMxxog8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "746538023958-7fi7d44npkcbnc4vrj12pfjfbi7jtqku.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "746538023958-89q71nb08tbas3242259h70i69gr2q1s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.allInOneSocials"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
