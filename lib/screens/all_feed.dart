@@ -22,7 +22,10 @@ class _AllFeedState extends State<AllFeed> {
       body: Container(
         height: MediaQuery.sizeOf(context).height,
         decoration: const BoxDecoration(
-            image: DecorationImage(image: AssetImage('assets/feed_bg.png'))),
+            image: DecorationImage(
+          image: AssetImage('assets/feed_bg.png'),
+          fit: BoxFit.fill,
+        )),
         child: const FeedList(),
       ),
     );

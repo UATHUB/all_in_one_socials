@@ -3,6 +3,7 @@ import 'package:all_in_one_socials/screens/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -50,100 +51,95 @@ bool isDisliked = false;
 bool isLoading = false;
 
 class _FeedItemState extends State<FeedItem> {
-  void likePost() async {
+  void like() async {
+    final postId = widget.postId;
     setState(() {
-      isLoading = true;
+      isLoading =
+          true; // Tuşları kısıtlamak için fonksiyonun başladığını göster
     });
-    final ref = FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid);
 
-    DocumentSnapshot ds = await ref.get();
-    List currentLikes = ds['liked'];
-    currentLikes.add(widget.postId);
-    await ref.update({'liked': currentLikes});
+    final userDoc = FirebaseFirestore.instance //
+        .collection('users') //  Kullanıcı Dosyasına Erişim
+        .doc(FirebaseAuth.instance.currentUser!.uid); //
 
-    List currentDislikes = ds['disliked'];
-    if (currentDislikes.contains(widget.postId)) {
-      currentDislikes.remove(widget.postId);
-      await ref.update({'disliked': currentDislikes});
+    DocumentSnapshot ds =
+        await userDoc.get(); // Kullanıcı dosyasının güncel halini al
+    List currentList = ds['liked']; // Alınan dosyadan liked listesini çek
+
+    bool isLiked = currentList.contains(
+        postId); //Post Idsi halihazırda liked listesinin içinde mi kontrol et
+
+    if (isLiked) {
+      currentList.remove(
+          postId); //Eğer halihazırda like atılmışsa demek ki kullanıcı kaldırmak istiyor. Kaldır
+    } else {
+      currentList.add(
+          postId); //Eğer daha önceden like atılmamışsa kullancı like atmak istiyor. At
     }
 
-    await Future.delayed(const Duration(seconds: 1));
-    setState(() {
-      isLoading = false;
-    });
+    List dislikedList = ds[
+        'disliked']; // Like tuşuna basılması her durumda posttaki dislike ı kaldırmalı
 
-    Get.snackbar('Successful', 'Post has been liked');
-  }
-
-  void dislikePost() async {
-    setState(() {
-      isLoading = true;
-    });
-    final ref = FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid);
-
-    DocumentSnapshot ds = await ref.get();
-    List currentDislikes = ds['disliked'];
-    currentDislikes.add(widget.postId);
-    await ref.update({'disliked': currentDislikes});
-
-    List currentLikes = ds['liked'];
-    if (currentLikes.contains(widget.postId)) {
-      currentLikes.remove(widget.postId);
-      await ref.update({'liked': currentLikes});
+    if (dislikedList.contains(postId)) {
+      dislikedList.remove(postId);
     }
 
-    await Future.delayed(const Duration(seconds: 1));
-    setState(() {
-      isLoading = false;
-    });
+    isLiked = true;
 
-    Get.snackbar('Successful', 'Post has been disliked');
+    await userDoc.update({
+      'liked': currentList,
+      'disliked': dislikedList
+    }); //Düzenlenen dosyayı karşıya geri yükle
+
+    setState(() {
+      isCurrentlyLiked(); //Dosyayı tekrar okut
+      isLoading = false; //Fonksiyon bitişini göster
+    });
   }
 
-  void unlikePost() async {
+  void dislike() async {
+    final postId = widget.postId;
     setState(() {
-      isLoading = true;
-    });
-    final ref = FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid);
-
-    DocumentSnapshot ds = await ref.get();
-    List currentLikes = ds['liked'];
-    currentLikes.remove(widget.postId);
-    await ref.update({'liked': currentLikes});
-
-    await Future.delayed(const Duration(seconds: 1));
-    setState(() {
-      isLoading = false;
+      isLoading =
+          true; // Tuşları kısıtlamak için fonksiyonun başladığını göster
     });
 
-    Get.snackbar('Successful', 'Post has been unliked');
-  }
+    final userDoc = FirebaseFirestore.instance //
+        .collection('users') //  Kullanıcı Dosyasına Erişim
+        .doc(FirebaseAuth.instance.currentUser!.uid); //
 
-  void undislikePost() async {
+    DocumentSnapshot ds =
+        await userDoc.get(); // Kullanıcı dosyasının güncel halini al
+    List currentList = ds['disliked']; // Alınan dosyadan liked listesini çek
+
+    bool isDisliked = currentList.contains(
+        postId); //Post Idsi halihazırda liked listesinin içinde mi kontrol et
+
+    if (isDisliked) {
+      currentList.remove(
+          postId); //Eğer halihazırda like atılmışsa demek ki kullanıcı kaldırmak istiyor. Kaldır
+    } else {
+      currentList.add(
+          postId); //Eğer daha önceden like atılmamışsa kullancı like atmak istiyor. At
+    }
+    List likedList = ds[
+        'liked']; // Dislike tuşuna basılması her durumda posttaki like ı kaldırmalı
+
+    if (likedList.contains(postId)) {
+      likedList.remove(postId);
+    }
+
+    isDisliked = true;
+
+    await userDoc.update({
+      'liked': likedList,
+      'disliked': currentList
+    }); //Düzenlenen dosyayı karşıya geri yükle
+
     setState(() {
-      isLoading = true;
+      isCurrentlyLiked(); //Dosyayı tekrar okut
+      isLoading = false; //Fonksiyon bitişini göster
     });
-    final ref = FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid);
-
-    DocumentSnapshot ds = await ref.get();
-    List currentDislikes = ds['disliked'];
-    currentDislikes.remove(widget.postId);
-    await ref.update({'disliked': currentDislikes});
-
-    await Future.delayed(const Duration(seconds: 1));
-    setState(() {
-      isLoading = false;
-    });
-
-    Get.snackbar('Successful', 'Post has been undisliked');
   }
 
   void isCurrentlyLiked() async {
@@ -154,49 +150,33 @@ class _FeedItemState extends State<FeedItem> {
     DocumentSnapshot ds = await ref.get();
     List currentLikes = ds['liked'];
 
+    await Future.delayed(Duration(seconds: 1));
+
     if (currentLikes.isEmpty) {
       isLiked = false;
+      isDisliked = false;
       return;
     }
 
     if (currentLikes.contains(widget.postId)) {
       isLiked = true;
     } else {
-      isLiked = false;
-    }
-  }
-
-  void isCurrentlyDisliked() async {
-    final ref = FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid);
-
-    DocumentSnapshot ds = await ref.get();
-    List currentDislikes = ds['disliked'];
-
-    if (currentDislikes.isEmpty) {
-      isDisliked = false;
-      return;
-    }
-
-    if (currentDislikes.contains(widget.postId)) {
-      isDisliked = true;
-    } else {
       isDisliked = false;
     }
+    await Future.delayed(Duration(seconds: 1));
   }
 
   @override
   void initState() {
+    isLiked = false;
+    isDisliked = false;
     isCurrentlyLiked();
-    isCurrentlyDisliked();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     isCurrentlyLiked();
-    isCurrentlyDisliked();
     if (widget.isPlain) {
       return GlassmorphicContainer(
         width: 300,
@@ -247,13 +227,7 @@ class _FeedItemState extends State<FeedItem> {
                   IconButton(
                     onPressed: () {
                       setState(() {
-                        if (isLiked) {
-                          dislikePost();
-                          return;
-                        } else {
-                          undislikePost();
-                          return;
-                        }
+                        dislike();
                       });
                     },
                     icon: isDisliked
@@ -270,14 +244,7 @@ class _FeedItemState extends State<FeedItem> {
                   IconButton(
                       onPressed: () {
                         setState(() {
-                          if (isLiked) {
-                            print('beğenilmiş');
-                            unlikePost();
-                            return;
-                          } else {
-                            likePost();
-                            return;
-                          }
+                          like();
                         });
                       },
                       icon: isLiked
