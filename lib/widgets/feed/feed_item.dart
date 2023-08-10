@@ -3,7 +3,6 @@ import 'package:all_in_one_socials/screens/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -84,8 +83,6 @@ class _FeedItemState extends State<FeedItem> {
       dislikedList.remove(postId);
     }
 
-    isLiked = true;
-
     await userDoc.update({
       'liked': currentList,
       'disliked': dislikedList
@@ -93,6 +90,7 @@ class _FeedItemState extends State<FeedItem> {
 
     setState(() {
       isCurrentlyLiked(); //Dosyayı tekrar okut
+      isLiked = true;
       isLoading = false; //Fonksiyon bitişini göster
     });
   }
@@ -129,8 +127,6 @@ class _FeedItemState extends State<FeedItem> {
       likedList.remove(postId);
     }
 
-    isDisliked = true;
-
     await userDoc.update({
       'liked': likedList,
       'disliked': currentList
@@ -138,6 +134,7 @@ class _FeedItemState extends State<FeedItem> {
 
     setState(() {
       isCurrentlyLiked(); //Dosyayı tekrar okut
+      isDisliked = true;
       isLoading = false; //Fonksiyon bitişini göster
     });
   }
@@ -150,7 +147,7 @@ class _FeedItemState extends State<FeedItem> {
     DocumentSnapshot ds = await ref.get();
     List currentLikes = ds['liked'];
 
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
 
     if (currentLikes.isEmpty) {
       isLiked = false;
@@ -163,20 +160,17 @@ class _FeedItemState extends State<FeedItem> {
     } else {
       isDisliked = false;
     }
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
   }
 
   @override
   void initState() {
-    isLiked = false;
-    isDisliked = false;
-    isCurrentlyLiked();
     super.initState();
+    isCurrentlyLiked();
   }
 
   @override
   Widget build(BuildContext context) {
-    isCurrentlyLiked();
     if (widget.isPlain) {
       return GlassmorphicContainer(
         width: 300,
@@ -189,8 +183,8 @@ class _FeedItemState extends State<FeedItem> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              const Color(0xFFffffff).withOpacity(0.1),
-              const Color(0xFFFFFFFF).withOpacity(0.12),
+              const Color.fromARGB(255, 0, 0, 0).withOpacity(0.1),
+              const Color.fromARGB(255, 0, 0, 0).withOpacity(0.12),
             ],
             stops: const [
               0.1,
@@ -225,11 +219,7 @@ class _FeedItemState extends State<FeedItem> {
                 if (isLoading) const CircularProgressIndicator(),
                 if (!isLoading)
                   IconButton(
-                    onPressed: () {
-                      setState(() {
-                        dislike();
-                      });
-                    },
+                    onPressed: dislike,
                     icon: isDisliked
                         ? const Icon(
                             Icons.thumb_down,
@@ -242,11 +232,7 @@ class _FeedItemState extends State<FeedItem> {
                   ),
                 if (!isLoading)
                   IconButton(
-                      onPressed: () {
-                        setState(() {
-                          like();
-                        });
-                      },
+                      onPressed: like,
                       icon: isLiked
                           ? const Icon(
                               Icons.thumb_up,
@@ -280,8 +266,8 @@ class _FeedItemState extends State<FeedItem> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              const Color(0xFFffffff).withOpacity(0.1),
-              const Color(0xFFFFFFFF).withOpacity(0.12),
+              const Color.fromARGB(255, 0, 0, 0).withOpacity(0.1),
+              const Color.fromARGB(255, 0, 0, 0).withOpacity(0.12),
             ],
             stops: const [
               0.1,

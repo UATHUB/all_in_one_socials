@@ -3,6 +3,7 @@ import 'package:all_in_one_socials/controllers/email_checker.dart';
 import 'package:all_in_one_socials/screens/all_chats.dart';
 import 'package:all_in_one_socials/screens/all_feed.dart';
 import 'package:all_in_one_socials/screens/followed_feed.dart';
+import 'package:all_in_one_socials/screens/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -83,7 +84,7 @@ class _TabsState extends State<Tabs> {
       length: _tabs.length,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: cp.container,
+          backgroundColor: cp.bg,
           title: FutureBuilder<String>(
               future: titleName,
               builder: (context, snapshot) {
@@ -97,6 +98,8 @@ class _TabsState extends State<Tabs> {
               }),
           centerTitle: true,
           leading: GestureDetector(
+            onTap: () =>
+                Get.to(ProfileScreen(userId: _firebase.currentUser!.uid)),
             onLongPress: () => _firebase.signOut(),
             child: FutureBuilder<String>(
               future: imageUrlFuture,

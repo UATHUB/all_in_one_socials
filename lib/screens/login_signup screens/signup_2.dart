@@ -77,6 +77,7 @@ class _SignupScreen2State extends State<SignupScreen2> {
         'following': [],
         'posts': [],
         'liked': [],
+        'disliked': [],
         'commented': [],
       });
     } on FirebaseAuthException catch (e) {

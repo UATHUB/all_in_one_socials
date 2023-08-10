@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 class EmailChecker extends GetxController {
@@ -13,5 +14,5 @@ class EmailChecker extends GetxController {
 }
 
 class UserDataController extends GetxController {
-  var userData;
+  late DocumentSnapshot<Map<String, dynamic>> userData;
 }

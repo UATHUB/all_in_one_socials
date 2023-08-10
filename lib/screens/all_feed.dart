@@ -26,7 +26,7 @@ class _AllFeedState extends State<AllFeed> {
           image: AssetImage('assets/feed_bg.png'),
           fit: BoxFit.fill,
         )),
-        child: const FeedList(),
+        child: const FeedList.general(),
       ),
     );
   }
