@@ -80,7 +80,6 @@ class _FeedListState extends State<FeedList> {
           createFollowingList();
 
           for (int i = 0; i < loadedPosts.length; i++) {
-            print(followedByUser.isEmpty);
             if (followedByUser.contains(loadedPosts[i].data()['userId'])) {
               displayedPosts.add(loadedPosts[i]);
             }
@@ -88,6 +87,12 @@ class _FeedListState extends State<FeedList> {
         }
         if (widget.isAll) {
           displayedPosts = loadedPosts;
+        }
+
+        if (displayedPosts.isEmpty) {
+          return const Center(
+            child: Text('There is nothing to show...'),
+          );
         }
 
         return ListView.builder(

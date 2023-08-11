@@ -79,6 +79,7 @@ class _SignupScreen2State extends State<SignupScreen2> {
         'liked': [],
         'disliked': [],
         'commented': [],
+        'chats': [],
       });
     } on FirebaseAuthException catch (e) {
       Get.snackbar('Error', e.message ?? 'Authentication Failed');
