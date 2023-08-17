@@ -3,7 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class NewMessage extends StatefulWidget {
-  const NewMessage({super.key});
+  const NewMessage({
+    super.key,
+    required this.chatId,
+  });
+  final String chatId;
 
   @override
   State<NewMessage> createState() => _NewMessageState();
@@ -34,13 +38,25 @@ class _NewMessageState extends State<NewMessage> {
         .doc(currentUser.uid)
         .get();
 
-    await FirebaseFirestore.instance.collection('chat').add({
+    final messageRef =
+        await FirebaseFirestore.instance.collection('messages').add({
       'text': enteredMessage,
       'createdAt': Timestamp.now(),
       'userId': currentUser.uid,
       'userName': userData.data()!['username'],
       'userImage': userData.data()!['image_url'],
     });
+
+    final currentChat = await FirebaseFirestore.instance
+        .collection('chats')
+        .doc(widget.chatId)
+        .get();
+    final List chatMessagesList = currentChat.data()!['messages'];
+    chatMessagesList.add(messageRef.id);
+    await FirebaseFirestore.instance
+        .collection('chats')
+        .doc(widget.chatId)
+        .update({'messages': chatMessagesList});
   }
 
   @override

@@ -26,7 +26,7 @@ class ChatItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: InkWell(
-        onTap: () => Get.to(const ChatScreen()),
+        onTap: () => Get.to(ChatScreen(chatId: chatId,username: username,)),
         child: GlassmorphicContainer(
           width: 300,
           height: 50,

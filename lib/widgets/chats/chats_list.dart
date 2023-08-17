@@ -87,9 +87,35 @@ class _ChatListState extends State<ChatList> {
 
                     final List messages = currentChat['messages'];
 
+                    String lastMessage = '';
                     // Check if the messages list is empty
-                    final lastMessage =
-                        messages.isNotEmpty ? messages.last : 'Say Hi!';
+                    if (messages.isEmpty) {
+                      lastMessage = 'Say Hi';
+                    }
+                    if (messages.isNotEmpty) {
+                      return FutureBuilder(
+                        future: FirebaseFirestore.instance
+                            .collection('messages')
+                            .doc(messages.last.toString())
+                            .get(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          }
+
+                          final messageData = snapshot.data.data();
+
+                          return ChatItem(
+                            lastMessage: messageData['text'],
+                            userImageUrl: userData['image_url'],
+                            username: userData['username'],
+                            chatId: chatId,
+                          );
+                        },
+                      );
+                    }
 
                     return ChatItem(
                       lastMessage: lastMessage,
